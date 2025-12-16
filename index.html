@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sudokulator</title>
+  </head>
+  <body>
+    <h1>Sudokulator</h1>
+    <p></p>Find combinations that sum to:</p>
+    <input type="range" id="sum-range" max="405" value="42" />
+    <br/>
+    <input type="number" id="sum-number" />
+    <br/>
+    <p>Using this number of digits:</p>
+    <br/>
+    <input type="range" id="count-range" max="45" value="3" />
+    <br/>
+    <input type="number" id="count-number" />
+    <br/>
+    <br/>
+    <fieldset>
+      <legend>Including digits</legend>
+        <label for="include-1">
+            <input type="checkbox" id="include-1" name="include" value="1">
+            1
+        </label>
+
+        <label for="include-2">
+            <input type="checkbox" id="include-2" name="include" value="2">
+            2
+        </label>
+
+        <label for="include-3">
+            <input type="checkbox" id="include-3" name="include" value="3">
+            3
+        </label>
+
+        <label for="include-4">
+            <input type="checkbox" id="include-4" name="include" value="4">
+            4
+        </label>
+
+        <label for="include-5">
+            <input type="checkbox" id="include-5" name="include" value="5">
+            5
+        </label>
+
+        <label for="include-6">
+            <input type="checkbox" id="include-6" name="include" value="6">
+            6
+        </label>
+
+        <label for="include-7">
+            <input type="checkbox" id="include-7" name="include" value="7">
+            7
+        </label>
+
+        <label for="include-8">
+            <input type="checkbox" id="include-8" name="include" value="8">
+            8
+        </label>
+
+        <label for="include-9">
+            <input type="checkbox" id="include-9" name="include" value="9">
+            9
+        </label>
+
+        <button id="clear-include">Clear</button>
+    </fieldset>
+    <fieldset>
+      <legend>Excluding digits</legend>
+        <label for="exclude-1">
+            <input type="checkbox" id="exclude-1" name="exclude" value="1">
+            1
+        </label>
+
+        <label for="exclude-2">
+            <input type="checkbox" id="exclude-2" name="exclude" value="2">
+            2
+        </label>
+
+        <label for="exclude-3">
+            <input type="checkbox" id="exclude-3" name="exclude" value="3">
+            3
+        </label>
+
+        <label for="exclude-4">
+            <input type="checkbox" id="exclude-4" name="exclude" value="4">
+            4
+        </label>
+
+        <label for="exclude-5">
+            <input type="checkbox" id="exclude-5" name="exclude" value="5">
+            5
+        </label>
+
+        <label for="exclude-6">
+            <input type="checkbox" id="exclude-6" name="exclude" value="6">
+            6
+        </label>
+
+        <label for="exclude-7">
+            <input type="checkbox" id="exclude-7" name="exclude" value="7">
+            7
+        </label>
+
+        <label for="exclude-8">
+            <input type="checkbox" id="exclude-8" name="exclude" value="8">
+            8
+        </label>
+
+        <label for="exclude-9">
+            <input type="checkbox" id="exclude-9" name="exclude" value="9">
+            9
+        </label>
+
+        <button id="clear-exclude">Clear</button>
+
+    </fieldset>
+
+    <br/>
+    <br/>
+
+    <div id="results"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
