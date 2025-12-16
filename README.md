@@ -12,7 +12,6 @@ The simplest and most obvious improvements are:
   user to start interacting with components that drop below the fold
   when you interact
 
-- No annoying dropdowns to access the digits you want to toggle
+- No dropdown to change the sum
 
 - A set of optional "must include" digits in addition to the exclude digits
-
