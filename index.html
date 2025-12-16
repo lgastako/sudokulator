@@ -4,11 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sudokulator</title>
+    <style>
+    fieldset {
+        display: inline-block;
+    }
+    </style>
   </head>
   <body>
     <h1>Sudokulator</h1>
     <p></p>Find combinations that sum to:</p>
-    <input type="range" id="sum-range" max="405" value="42" />
+    <input type="range" id="sum-range" max="405" value="11" />
     <br/>
     <input type="number" id="sum-number" />
     <br/>
@@ -66,8 +71,9 @@
             9
         </label>
 
-        <button id="clear-include">Clear</button>
+        <button style="margin-left: 10px;" id="clear-include">Clear</button>
     </fieldset>
+<br/>
     <fieldset>
       <legend>Excluding digits</legend>
         <label for="exclude-1">
@@ -115,7 +121,7 @@
             9
         </label>
 
-        <button id="clear-exclude">Clear</button>
+        <button style="margin-left: 10px;" id="clear-exclude">Clear</button>
 
     </fieldset>
 
