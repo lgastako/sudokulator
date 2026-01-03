@@ -6,183 +6,207 @@
     <title>Sudokulator</title>
 
     <style>
-      :root {
-        --bg: #f4f4f6;
-        --card: #ffffff;
-        --border: #dddddd;
-        --text: #222;
-        --muted: #666;
-        --accent: #4f46e5;
-        --include: #15803d;
-        --exclude: #b91c1c;
-      }
+     :root {
+         --bg: #f4f4f6;
+         --card: #ffffff;
+         --border: #dddddd;
+         --text: #222;
+         --muted: #666;
+         --accent: #4f46e5;
 
-      * {
-        box-sizing: border-box;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, sans-serif;
-      }
+         --include-bg: #dcfce7;
+         --include-fg: #166534;
+         --include-border: #86efac;
 
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-      }
+         --exclude-bg: #fee2e2;
+         --exclude-fg: #7f1d1d;
+         --exclude-border: #fca5a5;
+     }
 
-      h1 {
-        text-align: center;
-        margin-bottom: 1rem;
-        margin-top: -1.5rem;
-      }
+     * {
+         box-sizing: border-box;
+         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+         Roboto, sans-serif;
+     }
 
-      .container {
-        max-width: 900px;
-        margin: 2rem auto;
-        padding: 1.5rem;
-      }
+     body {
+         margin: 0;
+         background: var(--bg);
+         color: var(--text);
+     }
 
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 1.25rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-      }
+     h1 {
+         text-align: center;
+         margin-bottom: 1rem;
+         margin-top: -1.5rem;
+     }
 
-      .controls {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-      }
+     .container {
+         max-width: 900px;
+         margin: 2rem auto;
+         padding: 1.5rem;
+     }
 
-      .control-group label {
-        font-weight: 600;
-        display: block;
-        margin-bottom: 0.5rem;
-      }
+     .card {
+         background: var(--card);
+         border: 1px solid var(--border);
+         border-radius: 8px;
+         padding: 1.25rem;
+         margin-bottom: 1.5rem;
+         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+     }
 
-      .control-row {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-      }
+     fieldset {
+         border: 1px solid var(--border);
+         border-radius: 6px;
+         padding: 0.75rem 1rem 1rem;
+         margin-bottom: 1rem;
+     }
 
-      input[type="range"] {
-        flex: 1;
-      }
+     legend {
+         padding: 0 0.5rem;
+         font-weight: 600;
+         color: var(--muted);
+     }
 
-      input[type="number"] {
-        width: 5rem;
-        padding: 0.25rem 0.4rem;
-      }
+     /* Row layout: digits + clear button */
+     .digit-row {
+         display: flex;
+         align-items: center;
+         gap: 0.75rem;
+     }
 
-      fieldset {
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 0.75rem 1rem 1rem;
-        margin-bottom: 1rem;
-      }
+     .digit-grid {
+         display: grid;
+         grid-template-columns: repeat(9, 1fr);
+         gap: 0.5rem;
+         flex: 1;
+     }
 
-      legend {
-        padding: 0 0.5rem;
-        font-weight: 600;
-        color: var(--muted);
-      }
+     .digit {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         padding: 0.45rem 0;
+         border-radius: 6px;
+         cursor: pointer;
+         user-select: none;
 
-      .digit-grid {
-        display: grid;
-        grid-template-columns: repeat(9, 1fr);
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-      }
+         background: #fafafa;
+         border: 1px solid var(--border);
+         color: var(--text);
 
-      .digit {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.4rem 0;
-        border-radius: 5px;
-        cursor: pointer;
-        user-select: none;
-        transition: background-color 120ms ease, transform 80ms ease;
-      }
+         transition:
+             background-color 120ms ease,
+             border-color 120ms ease,
+             color 120ms ease,
+             transform 80ms ease;
+     }
 
-      .digit:hover {
-        background: #f0f0ff;
-      }
+     .digit:hover {
+         background: #f0f0ff;
+     }
 
-      .digit:active {
-        transform: scale(0.96);
-      }
+     .digit:active {
+         transform: scale(0.96);
+     }
 
-      .digit input {
-        position: absolute;
-        opacity: 0;
-        pointer-events: none;
-      }
+     .digit input {
+         position: absolute;
+         opacity: 0;
+         pointer-events: none;
+     }
 
-      .digit span {
-        transition: color 120ms ease, font-weight 120ms ease;
-      }
+     .digit span {
+         font-weight: 500;
+     }
 
-      fieldset:first-of-type .digit input:checked + span {
-        color: var(--include);
-        font-weight: 600;
-      }
+     /* Include checked */
+     fieldset:first-of-type
+     .digit input:checked + span {
+         color: var(--include-fg);
+     }
 
-      fieldset:last-of-type .digit input:checked + span {
-        color: var(--exclude);
-        font-weight: 600;
-      }
+     fieldset:first-of-type
+     .digit input:checked ~ span,
+     fieldset:first-of-type
+     .digit input:checked + span {
+         font-weight: 600;
+     }
 
-      .digit:focus-within {
-        outline: 2px solid var(--accent);
-        outline-offset: 2px;
-      }
+     fieldset:first-of-type
+     .digit input:checked {
+         /* no-op */
+     }
 
-      button {
-        margin-top: 0.75rem;
-        padding: 0.4rem 0.75rem;
-        border-radius: 5px;
-        border: 1px solid var(--border);
-        background: #fafafa;
-        cursor: pointer;
-      }
+     fieldset:first-of-type
+     .digit:has(input:checked) {
+         background: var(--include-bg);
+         border-color: var(--include-border);
+         color: var(--include-fg);
+     }
 
-      button:hover {
-        background: #f0f0f0;
-      }
+     /* Exclude checked */
+     fieldset:last-of-type
+     .digit:has(input:checked) {
+         background: var(--exclude-bg);
+         border-color: var(--exclude-border);
+         color: var(--exclude-fg);
+     }
 
-      .stats {
-        text-align: center;
-        color: var(--muted);
-        margin: 1rem 0;
-      }
+     fieldset:last-of-type
+     .digit input:checked + span {
+         font-weight: 600;
+     }
+
+     .digit:focus-within {
+         outline: 2px solid var(--accent);
+         outline-offset: 2px;
+     }
+
+     button {
+         padding: 0.45rem 0.75rem;
+         border-radius: 6px;
+         border: 1px solid var(--border);
+         background: #fafafa;
+         cursor: pointer;
+         white-space: nowrap;
+     }
+
+     button:hover {
+         background: #f0f0f0;
+     }
+
+     .stats {
+         text-align: center;
+         color: var(--muted);
+         margin: 1rem 0;
+     }
 
      #results > * {
          animation: fade-in 120ms ease;
          font-family: monospace, monospace;
      }
 
-      @keyframes fade-in {
-        from {
-          opacity: 0;
-          transform: translateY(-2px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+     @keyframes fade-in {
+         from {
+             opacity: 0;
+             transform: translateY(-2px);
+         }
+         to {
+             opacity: 1;
+             transform: translateY(0);
+         }
+     }
 
-      .s,
-      .f {
-        text-decoration: line-through;
-        font-style: italic;
-        color: #888;
-      }
+     .s,
+     .f {
+         text-decoration: line-through;
+         font-style: italic;
+         color: #888;
+     }
     </style>
+
   </head>
 
   <body>
@@ -208,37 +232,41 @@
       </div>
 
       <div class="card">
-        <fieldset>
-          <legend>Including digits</legend>
-          <div class="digit-grid">
-            <label class="digit"><input type="checkbox" name="include" value="1" /><span>1</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="2" /><span>2</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="3" /><span>3</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="4" /><span>4</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="5" /><span>5</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="6" /><span>6</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="7" /><span>7</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="8" /><span>8</span></label>
-            <label class="digit"><input type="checkbox" name="include" value="9" /><span>9</span></label>
-          </div>
-          <button id="clear-include">Clear</button>
-        </fieldset>
+<fieldset>
+  <legend>Including digits</legend>
+  <div class="digit-row">
+    <div class="digit-grid">
+      <label class="digit"><input type="checkbox" name="include" value="1"><span>1</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="2"><span>2</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="3"><span>3</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="4"><span>4</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="5"><span>5</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="6"><span>6</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="7"><span>7</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="8"><span>8</span></label>
+      <label class="digit"><input type="checkbox" name="include" value="9"><span>9</span></label>
+    </div>
+    <button id="clear-include">Clear</button>
+  </div>
+</fieldset>
 
-        <fieldset>
-          <legend>Excluding digits</legend>
-          <div class="digit-grid">
-            <label class="digit"><input type="checkbox" name="exclude" value="1" /><span>1</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="2" /><span>2</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="3" /><span>3</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="4" /><span>4</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="5" /><span>5</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="6" /><span>6</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="7" /><span>7</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="8" /><span>8</span></label>
-            <label class="digit"><input type="checkbox" name="exclude" value="9" /><span>9</span></label>
-          </div>
-          <button id="clear-exclude">Clear</button>
-        </fieldset>
+<fieldset>
+  <legend>Excluding digits</legend>
+  <div class="digit-row">
+    <div class="digit-grid">
+      <label class="digit"><input type="checkbox" name="exclude" value="1"><span>1</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="2"><span>2</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="3"><span>3</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="4"><span>4</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="5"><span>5</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="6"><span>6</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="7"><span>7</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="8"><span>8</span></label>
+      <label class="digit"><input type="checkbox" name="exclude" value="9"><span>9</span></label>
+    </div>
+    <button id="clear-exclude">Clear</button>
+  </div>
+</fieldset>
       </div>
 
       <div class="stats">
