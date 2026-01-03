@@ -205,6 +205,22 @@
          font-style: italic;
          color: #888;
      }
+
+     .controls {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+         gap: 1.5rem;
+     }
+
+     .control-row input[type="number"] {
+         flex: 0 0 auto;
+     }
+
+     .control-row input[type="range"] {
+         flex: 1 1 auto;
+         min-width: 0;
+     }
+
     </style>
 
   </head>
@@ -232,41 +248,41 @@
       </div>
 
       <div class="card">
-<fieldset>
-  <legend>Including digits</legend>
-  <div class="digit-row">
-    <div class="digit-grid">
-      <label class="digit"><input type="checkbox" name="include" value="1"><span>1</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="2"><span>2</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="3"><span>3</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="4"><span>4</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="5"><span>5</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="6"><span>6</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="7"><span>7</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="8"><span>8</span></label>
-      <label class="digit"><input type="checkbox" name="include" value="9"><span>9</span></label>
-    </div>
-    <button id="clear-include">Clear</button>
-  </div>
-</fieldset>
+          <fieldset>
+              <legend>Including digits</legend>
+              <div class="digit-row">
+                  <div class="digit-grid">
+                      <label class="digit"><input type="checkbox" name="include" value="1"><span>1</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="2"><span>2</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="3"><span>3</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="4"><span>4</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="5"><span>5</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="6"><span>6</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="7"><span>7</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="8"><span>8</span></label>
+                      <label class="digit"><input type="checkbox" name="include" value="9"><span>9</span></label>
+                  </div>
+                  <button id="clear-include">Clear</button>
+              </div>
+          </fieldset>
 
-<fieldset>
-  <legend>Excluding digits</legend>
-  <div class="digit-row">
-    <div class="digit-grid">
-      <label class="digit"><input type="checkbox" name="exclude" value="1"><span>1</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="2"><span>2</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="3"><span>3</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="4"><span>4</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="5"><span>5</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="6"><span>6</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="7"><span>7</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="8"><span>8</span></label>
-      <label class="digit"><input type="checkbox" name="exclude" value="9"><span>9</span></label>
-    </div>
-    <button id="clear-exclude">Clear</button>
-  </div>
-</fieldset>
+          <fieldset>
+              <legend>Excluding digits</legend>
+              <div class="digit-row">
+                  <div class="digit-grid">
+                      <label class="digit"><input type="checkbox" name="exclude" value="1"><span>1</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="2"><span>2</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="3"><span>3</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="4"><span>4</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="5"><span>5</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="6"><span>6</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="7"><span>7</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="8"><span>8</span></label>
+                      <label class="digit"><input type="checkbox" name="exclude" value="9"><span>9</span></label>
+                  </div>
+                  <button id="clear-exclude">Clear</button>
+              </div>
+          </fieldset>
       </div>
 
       <div class="stats">
