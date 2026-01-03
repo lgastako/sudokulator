@@ -1,3 +1,8 @@
+// const handleClick = (e) => {
+//     console.log("trying to toggle underline", e)
+//     //    e.target.style.classList.toggle("u")
+// }
+
 ;(function () {
   const sumRange = document.getElementById('sum-range')
   const sumNumber = document.getElementById('sum-number')
@@ -51,6 +56,20 @@
       input.checked = false
     })
   })
+
+  // const drawCombo = (combo) => combo.join(', ')
+  const drawCombo = (combo) => {
+      const s = combo.join(', ')
+      return `<div onClick="event.target.classList.toggle('s')">${s}</div>`
+  }
+
+  const drawCombos = (filtered) => {
+      document.getElementById('results').innerHTML =
+          filtered.length > 0
+          ? filtered.map(drawCombo).join("\n")
+          : 'No combinations found'
+  }
+
   const generateCombinations = (count, allowedDigits) => {
     const results = []
 
@@ -109,8 +128,13 @@
     // Generate all possible combos of the correct size
     const combinations = generateCombinations(targetCount, allowedDigits)
 
+    const num_combos = document.getElementById("num_combos")
+
+    if (num_combos) num_combos.textContent = "" + combinations.length
+
     // Filter by includes + sum
     const includeSet = new Set(includeDigits)
+
     const filtered = combinations.filter(combo => {
       // must contain all include digits
       for (const d of includeSet) {
@@ -121,13 +145,13 @@
       return s === targetSum
     })
 
+    const num_filtered = document.getElementById("num_filtered")
+    if (num_filtered) num_filtered.textContent = "" + filtered.length
+
     console.log(`Found ${filtered.length} combinations:`)
     console.log(filtered)
 
-    document.getElementById('results').innerHTML =
-      filtered.length > 0
-        ? filtered.map(combo => combo.join(', ')).join('<br>')
-        : 'No combinations found'
+    drawCombos(filtered)
   }
 
   // When anything changes, calculate the combinations

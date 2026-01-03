@@ -4,132 +4,276 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sudokulator</title>
+
     <style>
-    fieldset {
-        display: inline-block;
-    }
+      :root {
+        --bg: #f4f4f6;
+        --card: #ffffff;
+        --border: #dddddd;
+        --text: #222;
+        --muted: #666;
+        --accent: #4f46e5;
+        --include: #15803d;
+        --exclude: #b91c1c;
+      }
+
+      * {
+        box-sizing: border-box;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 1.5rem;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .control-group label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .control-row {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      input[type="range"] {
+        flex: 1;
+      }
+
+      input[type="number"] {
+        width: 5rem;
+        padding: 0.25rem 0.4rem;
+      }
+
+      fieldset {
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.75rem 1rem 1rem;
+        margin-bottom: 1rem;
+      }
+
+      legend {
+        padding: 0 0.5rem;
+        font-weight: 600;
+        color: var(--muted);
+      }
+
+      .digit-grid {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .digit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.4rem 0;
+        border-radius: 5px;
+        cursor: pointer;
+        user-select: none;
+        transition: background-color 120ms ease, transform 80ms ease;
+      }
+
+      .digit:hover {
+        background: #f0f0ff;
+      }
+
+      .digit:active {
+        transform: scale(0.96);
+      }
+
+      .digit input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .digit span {
+        transition: color 120ms ease, font-weight 120ms ease;
+      }
+
+      fieldset:first-of-type .digit input:checked + span {
+        color: var(--include);
+        font-weight: 600;
+      }
+
+      fieldset:last-of-type .digit input:checked + span {
+        color: var(--exclude);
+        font-weight: 600;
+      }
+
+      .digit:focus-within {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      button {
+        margin-top: 0.75rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 5px;
+        border: 1px solid var(--border);
+        background: #fafafa;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #f0f0f0;
+      }
+
+      .stats {
+        text-align: center;
+        color: var(--muted);
+        margin: 1rem 0;
+      }
+
+      #results > * {
+        animation: fade-in 120ms ease;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+          transform: translateY(-2px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .s,
+      .f {
+        text-decoration: line-through;
+        font-style: italic;
+        color: #888;
+      }
     </style>
   </head>
-  <body style="background-color: #f4f4f4;">
-    <h1>Sudokulator</h1>
-    <p></p>Find combinations that sum to:</p>
-    <input type="range" id="sum-range" max="405" value="11" />
-    <br/>
-    <input type="number" id="sum-number" />
-    <br/>
-    <p>Using this number of digits:</p>
-    <br/>
-    <input type="range" id="count-range" max="45" value="3" />
-    <br/>
-    <input type="number" id="count-number" />
-    <br/>
-    <br/>
-    <fieldset>
-      <legend>Including digits</legend>
-        <label for="include-1">
-            <input type="checkbox" id="include-1" name="include" value="1">
-            1
-        </label>
 
-        <label for="include-2">
-            <input type="checkbox" id="include-2" name="include" value="2">
-            2
-        </label>
+  <body>
+    <div class="container">
+      <h1>Sudokulator</h1>
 
-        <label for="include-3">
-            <input type="checkbox" id="include-3" name="include" value="3">
-            3
-        </label>
+      <div class="card controls">
+        <div class="control-group">
+          <label>Find combinations that sum to</label>
+          <div class="control-row">
+            <input type="range" id="sum-range" max="405" value="11" />
+            <input type="number" id="sum-number" />
+          </div>
+        </div>
 
-        <label for="include-4">
-            <input type="checkbox" id="include-4" name="include" value="4">
-            4
-        </label>
+        <div class="control-group">
+          <label>Using this number of digits</label>
+          <div class="control-row">
+            <input type="range" id="count-range" max="45" value="3" />
+            <input type="number" id="count-number" />
+          </div>
+        </div>
+      </div>
 
-        <label for="include-5">
-            <input type="checkbox" id="include-5" name="include" value="5">
-            5
-        </label>
+      <div class="card">
+        <fieldset>
+          <legend>Including digits</legend>
+          <div class="digit-grid">
+            <label class="digit"><input type="checkbox" name="include" value="1" /><span>1</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="2" /><span>2</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="3" /><span>3</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="4" /><span>4</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="5" /><span>5</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="6" /><span>6</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="7" /><span>7</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="8" /><span>8</span></label>
+            <label class="digit"><input type="checkbox" name="include" value="9" /><span>9</span></label>
+          </div>
+          <button id="clear-include">Clear</button>
+        </fieldset>
 
-        <label for="include-6">
-            <input type="checkbox" id="include-6" name="include" value="6">
-            6
-        </label>
+        <fieldset>
+          <legend>Excluding digits</legend>
+          <div class="digit-grid">
+            <label class="digit"><input type="checkbox" name="exclude" value="1" /><span>1</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="2" /><span>2</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="3" /><span>3</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="4" /><span>4</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="5" /><span>5</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="6" /><span>6</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="7" /><span>7</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="8" /><span>8</span></label>
+            <label class="digit"><input type="checkbox" name="exclude" value="9" /><span>9</span></label>
+          </div>
+          <button id="clear-exclude">Clear</button>
+        </fieldset>
+      </div>
 
-        <label for="include-7">
-            <input type="checkbox" id="include-7" name="include" value="7">
-            7
-        </label>
+      <div class="stats">
+        Filtered to <strong><span id="num_filtered">0</span></strong> of
+        <strong><span id="num_combos">0</span></strong> total combinations.
+      </div>
 
-        <label for="include-8">
-            <input type="checkbox" id="include-8" name="include" value="8">
-            8
-        </label>
-
-        <label for="include-9">
-            <input type="checkbox" id="include-9" name="include" value="9">
-            9
-        </label>
-
-        <button style="margin-left: 10px;" id="clear-include">Clear</button>
-    </fieldset>
-<br/>
-    <fieldset>
-      <legend>Excluding digits</legend>
-        <label for="exclude-1">
-            <input type="checkbox" id="exclude-1" name="exclude" value="1">
-            1
-        </label>
-
-        <label for="exclude-2">
-            <input type="checkbox" id="exclude-2" name="exclude" value="2">
-            2
-        </label>
-
-        <label for="exclude-3">
-            <input type="checkbox" id="exclude-3" name="exclude" value="3">
-            3
-        </label>
-
-        <label for="exclude-4">
-            <input type="checkbox" id="exclude-4" name="exclude" value="4">
-            4
-        </label>
-
-        <label for="exclude-5">
-            <input type="checkbox" id="exclude-5" name="exclude" value="5">
-            5
-        </label>
-
-        <label for="exclude-6">
-            <input type="checkbox" id="exclude-6" name="exclude" value="6">
-            6
-        </label>
-
-        <label for="exclude-7">
-            <input type="checkbox" id="exclude-7" name="exclude" value="7">
-            7
-        </label>
-
-        <label for="exclude-8">
-            <input type="checkbox" id="exclude-8" name="exclude" value="8">
-            8
-        </label>
-
-        <label for="exclude-9">
-            <input type="checkbox" id="exclude-9" name="exclude" value="9">
-            9
-        </label>
-
-        <button style="margin-left: 10px;" id="clear-exclude">Clear</button>
-
-    </fieldset>
-
-    <br/>
-    <br/>
-
-    <div id="results"></div>
+      <div class="card" id="results"></div>
+    </div>
 
     <script src="script.js"></script>
+
+    <!-- Keyboard digit toggles (1–9) -->
+    <script>
+     document.addEventListener("keydown", (e) => {
+         if (e.target.matches("input, textarea")) return;
+         if (e.key < "1" || e.key > "9") return;
+
+         const value = e.key;
+         const include = document.querySelector(
+             `input[name="include"][value="${value}"]`
+         );
+         const exclude = document.querySelector(
+             `input[name="exclude"][value="${value}"]`
+         );
+
+         // Toggle include first; if already checked, toggle exclude
+         if (include) {
+             if (!include.checked) {
+                 include.checked = true;
+                 include.dispatchEvent(new Event("change", { bubbles: true }));
+             } else if (exclude) {
+                 exclude.checked = !exclude.checked;
+                 exclude.dispatchEvent(new Event("change", { bubbles: true }));
+             }
+         }
+     });
+    </script>
   </body>
 </html>
