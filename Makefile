@@ -15,21 +15,26 @@ build: ## Build the dev buid
 	$(BUND) build $(ARGS)
 
 dev:  ## Run the dev server
-	$(BUN) --bun run dev
+	$(BUN) --bun run dev $(ARGS)
 
-fmt: ## Run cargo fmt with $(ARGS)
-	$(BUNX) prettier -w ./src
+fmt: ## Run prettier
+	$(BUNX) prettier -w ./src $(ARGS)
 
 lint:  ## lint
-	$(BUNX) eslint .
+	$(BUNX) eslint . $(ARGS)
 
-test:  ## Run cargo test
-	$(BUN) test
+test:  ## Run the tests once
+	$(BUN) test $(ARGS)
+
+watch:  ## Run the tests in watch mode
+	$(BUN) test --watch $(ARGS)
 
 # Aliases
 
 a: aliases
 b: build
+d: dev
 f: fmt
 l: lint
 t: test
+w: watch
