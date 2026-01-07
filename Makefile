@@ -21,7 +21,7 @@ fmt: ## Run cargo fmt with $(ARGS)
 	$(BUNX) prettier -w ./src
 
 lint:  ## lint
-	$(BUNX) tslint
+	$(BUNX) eslint .
 
 test:  ## Run cargo test
 	$(BUN) test
