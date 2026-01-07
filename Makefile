@@ -9,6 +9,7 @@ aliases: ## Show the aliases
 	@sed -n '/^# Aliases/,$$p' Makefile | sed -n '/^[a-zA-Z_-]*: /p'
 
 BUN?=bun
+BUNX?=$(BUN)x
 
 build: ## Build the dev buid
 	$(BUND) build $(ARGS)
@@ -16,35 +17,19 @@ build: ## Build the dev buid
 dev:  ## Run the dev server
 	$(BUN) --bun run dev
 
-# check: ## Run cargo check
-# 	$(CARGO) check $(ARGS)
+fmt: ## Run cargo fmt with $(ARGS)
+	$(BUNX) prettier -w ./src
 
-# fmt: ## Run cargo fmt with $(ARGS)
-# 	$(CARGO) fmt
+lint:  ## lint
+	$(BUNX) tslint
 
-# full-release: fmt check lint release # full release built with fmt/check/lint
-
-# lint:  ## lint
-# 	$(CARGO) clippy
-
-# release: ## Build the release build
-# 	$(CARGO) build --release $(ARGS)
-
-# run:  ## Run the dev build with $(ARGS)
-# 	$(CARGO) run -- $(ARGS)
-
-# test:  ## Run cargo test
-# 	$(CARGO) test
+test:  ## Run cargo test
+	$(BUN) test
 
 # Aliases
 
 a: aliases
 b: build
-c: check
 f: fmt
-fr: full-release
 l: lint
-r: run
-re: release
 t: test
-wt: watch-types

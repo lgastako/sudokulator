@@ -113,7 +113,7 @@ export default function Header() {
             <button
               className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
               onClick={() =>
-                setGroupedExpanded((prev) => ({
+                setGroupedExpanded(prev => ({
                   ...prev,
                   StartSSRDemo: !prev.StartSSRDemo,
                 }))
