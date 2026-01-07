@@ -5,7 +5,6 @@ import reactHooks from "eslint-plugin-react-hooks";
 import importPlugin from "eslint-plugin-import";
 
 export default [
-  // Ignore generated / vendor files
   {
     ignores: [
       "dist/**",
@@ -14,34 +13,34 @@ export default [
     ],
   },
 
-  // Base JS rules
   js.configs.recommended,
 
-  // TypeScript (type-aware, strict)
-  ...tseslint.configs.recommendedTypeChecked,
-
-  {
+  // TypeScript ONLY (type-aware)
+  ...tseslint.configs.recommendedTypeChecked.map((config) => ({
+    ...config,
+    files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
+      ...config.languageOptions,
       parserOptions: {
         project: "./tsconfig.json",
         tsconfigRootDir: import.meta.dirname,
       },
     },
-
     plugins: {
+      ...config.plugins,
+      "@typescript-eslint": tseslint.plugin,
       react,
       "react-hooks": reactHooks,
       import: importPlugin,
     },
-
     settings: {
       react: {
         version: "detect",
       },
     },
-
     rules: {
-      /* TypeScript: no forgiveness */
+      ...config.rules,
+
       "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
       "@typescript-eslint/no-floating-promises": "error",
       "@typescript-eslint/no-misused-promises": "error",
@@ -50,13 +49,11 @@ export default [
       "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/no-unnecessary-type-assertion": "error",
 
-      /* React discipline */
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
 
-      /* Import hygiene */
       "import/no-cycle": "error",
       "import/no-self-import": "error",
     },
-  },
+  })),
 ];
