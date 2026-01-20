@@ -11,8 +11,8 @@ aliases: ## Show the aliases
 BUN?=bun
 BUNX?=$(BUN)x
 
-build: ## Build the dev buid
-	$(BUND) build $(ARGS)
+build: ## Build the dev build
+	$(BUN) run build $(ARGS)
 
 dev:  ## Run the dev server
 	$(BUN) --bun run dev $(ARGS)

@@ -10,6 +10,12 @@ export default [
       "dist/**",
       "node_modules/**",
       "routeTree.gen.ts",
+      "original/**",
+      "babel.config.js",
+      "src/sum.js",
+      "src/sum.test.js",
+      "src/data/demo.*",
+      "src/routes/demo/**",
     ],
   },
 
