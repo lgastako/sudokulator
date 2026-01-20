@@ -10,6 +10,7 @@ interface CalculatorParams {
 interface CalculatorResult {
   validCombinations: number[][]
   filteredCombinations: Set<string>
+  excludedCombinations: Set<string>
 }
 
 export function useCombinationCalculator({
@@ -21,23 +22,18 @@ export function useCombinationCalculator({
   return useMemo(() => {
     // Basic sanity checks
     if (includeDigits.size > count) {
-      return { validCombinations: [], filteredCombinations: new Set() }
+      return { validCombinations: [], filteredCombinations: new Set(), excludedCombinations: new Set() }
     }
 
     // Check for conflicts between include and exclude
     for (const digit of includeDigits) {
       if (excludeDigits.has(digit)) {
-        return { validCombinations: [], filteredCombinations: new Set() }
+        return { validCombinations: [], filteredCombinations: new Set(), excludedCombinations: new Set() }
       }
     }
 
-    // Get allowed digits (1-9 minus excluded)
-    const allowedDigits: number[] = []
-    for (let d = 1; d <= 9; d++) {
-      if (!excludeDigits.has(d)) {
-        allowedDigits.push(d)
-      }
-    }
+    // Generate all combinations using all digits 1-9 (not filtering by exclude yet)
+    const allDigits = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     // Generate all combinations of the correct size that sum to the target
     const generateValidCombinations = (targetCount: number, digits: number[], targetSum: number): number[][] => {
@@ -73,13 +69,25 @@ export function useCombinationCalculator({
       return results
     }
 
-    const validCombinations = generateValidCombinations(count, allowedDigits, sum)
+    const validCombinations = generateValidCombinations(count, allDigits, sum)
 
-    // Filter by includes - all combinations already sum to target
+    // Separate combinations into filtered (meets include/exclude criteria) and excluded sets
     const filteredCombinations = new Set<string>()
+    const excludedCombinations = new Set<string>()
 
     for (const combo of validCombinations) {
-      // Must contain all include digits
+      const comboKey = combo.join(',')
+
+      // Check if contains excluded digits
+      let hasExcludedDigit = false
+      for (const digit of excludeDigits) {
+        if (combo.includes(digit)) {
+          hasExcludedDigit = true
+          break
+        }
+      }
+
+      // Check if contains all required include digits
       let hasAllIncludes = true
       for (const digit of includeDigits) {
         if (!combo.includes(digit)) {
@@ -88,11 +96,13 @@ export function useCombinationCalculator({
         }
       }
 
-      if (hasAllIncludes) {
-        filteredCombinations.add(combo.join(','))
+      if (hasExcludedDigit) {
+        excludedCombinations.add(comboKey)
+      } else if (hasAllIncludes) {
+        filteredCombinations.add(comboKey)
       }
     }
 
-    return { validCombinations, filteredCombinations }
+    return { validCombinations, filteredCombinations, excludedCombinations }
   }, [sum, count, includeDigits, excludeDigits])
 }

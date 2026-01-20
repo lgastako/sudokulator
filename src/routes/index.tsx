@@ -15,7 +15,7 @@ function App() {
   const [excludeDigits, setExcludeDigits] = useState(new Set<number>())
   const [struckCombinations, setStruckCombinations] = useState(new Set<string>())
 
-  const { validCombinations, filteredCombinations } = useCombinationCalculator({
+  const { validCombinations, filteredCombinations, excludedCombinations } = useCombinationCalculator({
     sum,
     count,
     includeDigits,
@@ -91,6 +91,7 @@ function App() {
         <ResultsList
           combinations={validCombinations}
           filteredCombinations={filteredCombinations}
+          excludedCombinations={excludedCombinations}
           struckCombinations={struckCombinations}
           onToggleStruck={handleToggleStruck}
         />
