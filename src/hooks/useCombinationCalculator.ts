@@ -8,7 +8,7 @@ interface CalculatorParams {
 }
 
 interface CalculatorResult {
-  allCombinations: number[][]
+  validCombinations: number[][]
   filteredCombinations: Set<string>
 }
 
@@ -21,13 +21,13 @@ export function useCombinationCalculator({
   return useMemo(() => {
     // Basic sanity checks
     if (includeDigits.size > count) {
-      return { allCombinations: [], filteredCombinations: new Set() }
+      return { validCombinations: [], filteredCombinations: new Set() }
     }
 
     // Check for conflicts between include and exclude
     for (const digit of includeDigits) {
       if (excludeDigits.has(digit)) {
-        return { allCombinations: [], filteredCombinations: new Set() }
+        return { validCombinations: [], filteredCombinations: new Set() }
       }
     }
 
@@ -39,33 +39,46 @@ export function useCombinationCalculator({
       }
     }
 
-    // Generate all combinations of the correct size
-    const generateCombinations = (targetCount: number, digits: number[]): number[][] => {
+    // Generate all combinations of the correct size that sum to the target
+    const generateValidCombinations = (targetCount: number, digits: number[], targetSum: number): number[][] => {
       const results: number[][] = []
 
-      const backtrack = (startIdx: number, combo: number[]) => {
+      const backtrack = (startIdx: number, combo: number[], currentSum: number) => {
         if (combo.length === targetCount) {
-          results.push([...combo])
+          if (currentSum === targetSum) {
+            results.push([...combo])
+          }
           return
+        }
+
+        // Early termination if we can't reach target sum
+        const remaining = targetCount - combo.length
+        if (remaining > 0) {
+          const minPossibleSum = currentSum + digits.slice(startIdx).slice(0, remaining).reduce((a, b) => a + b, 0)
+          const maxPossibleSum = currentSum + digits.slice(-remaining).reduce((a, b) => a + b, 0)
+
+          if (targetSum < minPossibleSum || targetSum > maxPossibleSum) {
+            return
+          }
         }
 
         for (let i = startIdx; i < digits.length; i++) {
           combo.push(digits[i])
-          backtrack(i + 1, combo)
+          backtrack(i + 1, combo, currentSum + digits[i])
           combo.pop()
         }
       }
 
-      backtrack(0, [])
+      backtrack(0, [], 0)
       return results
     }
 
-    const allCombinations = generateCombinations(count, allowedDigits)
+    const validCombinations = generateValidCombinations(count, allowedDigits, sum)
 
-    // Filter by includes + sum
+    // Filter by includes - all combinations already sum to target
     const filteredCombinations = new Set<string>()
 
-    for (const combo of allCombinations) {
+    for (const combo of validCombinations) {
       // Must contain all include digits
       let hasAllIncludes = true
       for (const digit of includeDigits) {
@@ -75,15 +88,11 @@ export function useCombinationCalculator({
         }
       }
 
-      if (!hasAllIncludes) continue
-
-      // Must sum to target
-      const comboSum = combo.reduce((acc, x) => acc + x, 0)
-      if (comboSum === sum) {
+      if (hasAllIncludes) {
         filteredCombinations.add(combo.join(','))
       }
     }
 
-    return { allCombinations, filteredCombinations }
+    return { validCombinations, filteredCombinations }
   }, [sum, count, includeDigits, excludeDigits])
 }

@@ -9,6 +9,7 @@ export default [
     ignores: [
       "dist/**",
       "node_modules/**",
+      ".output/**",
       "routeTree.gen.ts",
       "original/**",
       "babel.config.js",
