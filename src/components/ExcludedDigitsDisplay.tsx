@@ -16,7 +16,7 @@ export function ExcludedDigitsDisplay({ excludedDigits }: ExcludedDigitsDisplayP
           </div>
         ) : (
           <div className="text-gray-500 italic">
-            No numbers are excluded from the valid combinations above.
+            No numbers are excluded from the valid combinations below.
           </div>
         )}
       </div>

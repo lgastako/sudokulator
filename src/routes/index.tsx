@@ -24,6 +24,7 @@ function App() {
     count,
     includeDigits,
     excludeDigits,
+    struckCombinations,
   })
 
   const { savedConfigs, saveConfiguration, deleteConfiguration, newlySavedId } = useSavedConfigurations()

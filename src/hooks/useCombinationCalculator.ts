@@ -5,6 +5,7 @@ interface CalculatorParams {
   count: number
   includeDigits: Set<number>
   excludeDigits: Set<number>
+  struckCombinations?: Set<string>
 }
 
 interface CalculatorResult {
@@ -19,6 +20,7 @@ export function useCombinationCalculator({
   count,
   includeDigits,
   excludeDigits,
+  struckCombinations = new Set(),
 }: CalculatorParams): CalculatorResult {
   return useMemo(() => {
     // Basic sanity checks
@@ -104,18 +106,22 @@ export function useCombinationCalculator({
       }
     }
 
-    // Calculate digits that appear in no valid combinations
-    const digitsInCombinations = new Set<number>()
+    // Calculate digits that appear in no valid combinations (excluding struck combinations)
+    const digitsInActiveCombinations = new Set<number>()
     for (const combo of validCombinations) {
-      for (const digit of combo) {
-        digitsInCombinations.add(digit)
+      const comboKey = combo.join(',')
+      // Only count digits from combinations that aren't manually struck out
+      if (!struckCombinations.has(comboKey)) {
+        for (const digit of combo) {
+          digitsInActiveCombinations.add(digit)
+        }
       }
     }
 
     const completelyExcludedDigits = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-      .filter(digit => !digitsInCombinations.has(digit))
+      .filter(digit => !digitsInActiveCombinations.has(digit))
       .sort()
 
     return { validCombinations, filteredCombinations, excludedCombinations, completelyExcludedDigits }
-  }, [sum, count, includeDigits, excludeDigits])
+  }, [sum, count, includeDigits, excludeDigits, struckCombinations])
 }
