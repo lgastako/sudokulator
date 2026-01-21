@@ -11,6 +11,7 @@ interface CalculatorResult {
   validCombinations: number[][]
   filteredCombinations: Set<string>
   excludedCombinations: Set<string>
+  completelyExcludedDigits: number[]
 }
 
 export function useCombinationCalculator({
@@ -22,13 +23,13 @@ export function useCombinationCalculator({
   return useMemo(() => {
     // Basic sanity checks
     if (includeDigits.size > count) {
-      return { validCombinations: [], filteredCombinations: new Set(), excludedCombinations: new Set() }
+      return { validCombinations: [], filteredCombinations: new Set(), excludedCombinations: new Set(), completelyExcludedDigits: [] }
     }
 
     // Check for conflicts between include and exclude
     for (const digit of includeDigits) {
       if (excludeDigits.has(digit)) {
-        return { validCombinations: [], filteredCombinations: new Set(), excludedCombinations: new Set() }
+        return { validCombinations: [], filteredCombinations: new Set(), excludedCombinations: new Set(), completelyExcludedDigits: [] }
       }
     }
 
@@ -103,6 +104,18 @@ export function useCombinationCalculator({
       }
     }
 
-    return { validCombinations, filteredCombinations, excludedCombinations }
+    // Calculate digits that appear in no valid combinations
+    const digitsInCombinations = new Set<number>()
+    for (const combo of validCombinations) {
+      for (const digit of combo) {
+        digitsInCombinations.add(digit)
+      }
+    }
+
+    const completelyExcludedDigits = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      .filter(digit => !digitsInCombinations.has(digit))
+      .sort()
+
+    return { validCombinations, filteredCombinations, excludedCombinations, completelyExcludedDigits }
   }, [sum, count, includeDigits, excludeDigits])
 }

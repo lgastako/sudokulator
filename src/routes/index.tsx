@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { SumControls } from '@/components/SumControls'
 import { DigitSelector } from '@/components/DigitSelector'
 import { ResultsList } from '@/components/ResultsList'
+import { ExcludedDigitsDisplay } from '@/components/ExcludedDigitsDisplay'
 import { useCombinationCalculator } from '@/hooks/useCombinationCalculator'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 
@@ -15,7 +16,7 @@ function App() {
   const [excludeDigits, setExcludeDigits] = useState(new Set<number>())
   const [struckCombinations, setStruckCombinations] = useState(new Set<string>())
 
-  const { validCombinations, filteredCombinations, excludedCombinations } = useCombinationCalculator({
+  const { validCombinations, filteredCombinations, excludedCombinations, completelyExcludedDigits } = useCombinationCalculator({
     sum,
     count,
     includeDigits,
@@ -95,6 +96,10 @@ function App() {
           struckCombinations={struckCombinations}
           onToggleStruck={handleToggleStruck}
         />
+
+        <div className="mt-4">
+          <ExcludedDigitsDisplay excludedDigits={completelyExcludedDigits} />
+        </div>
       </div>
     </div>
   )
