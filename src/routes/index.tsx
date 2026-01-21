@@ -90,6 +90,10 @@ function App() {
           onClearExclude={handleClearExclude}
         />
 
+        <div className="mb-4">
+          <ExcludedDigitsDisplay excludedDigits={completelyExcludedDigits} />
+        </div>
+
         <ResultsList
           combinations={validCombinations}
           filteredCombinations={filteredCombinations}
@@ -97,10 +101,6 @@ function App() {
           struckCombinations={struckCombinations}
           onToggleStruck={handleToggleStruck}
         />
-
-        <div className="mt-4">
-          <ExcludedDigitsDisplay excludedDigits={completelyExcludedDigits} />
-        </div>
       </div>
     </div>
   )
