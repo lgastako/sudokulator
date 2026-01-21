@@ -26,7 +26,7 @@ function App() {
     excludeDigits,
   })
 
-  const { savedConfigs, saveConfiguration, newlySavedId } = useSavedConfigurations()
+  const { savedConfigs, saveConfiguration, deleteConfiguration, newlySavedId } = useSavedConfigurations()
 
   const handleIncludeChange = (digit: number, included: boolean) => {
     setIncludeDigits(prev => {
@@ -122,6 +122,7 @@ function App() {
         <SavedConfigurationsArea
           savedConfigs={savedConfigs}
           newlySavedId={newlySavedId}
+          onDelete={deleteConfiguration}
         />
       </div>
     </div>
