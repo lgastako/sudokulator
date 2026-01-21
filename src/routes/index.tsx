@@ -4,8 +4,11 @@ import { SumControls } from '@/components/SumControls'
 import { DigitSelector } from '@/components/DigitSelector'
 import { ResultsList } from '@/components/ResultsList'
 import { ExcludedDigitsDisplay } from '@/components/ExcludedDigitsDisplay'
+import { SaveButton } from '@/components/SaveButton'
+import { SavedConfigurationsArea } from '@/components/SavedConfigurationsArea'
 import { useCombinationCalculator } from '@/hooks/useCombinationCalculator'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+import { useSavedConfigurations } from '@/hooks/useSavedConfigurations'
 
 export const Route = createFileRoute('/')({ component: App })
 
@@ -22,6 +25,8 @@ function App() {
     includeDigits,
     excludeDigits,
   })
+
+  const { savedConfigs, saveConfiguration, newlySavedId } = useSavedConfigurations()
 
   const handleIncludeChange = (digit: number, included: boolean) => {
     setIncludeDigits(prev => {
@@ -50,6 +55,15 @@ function App() {
   const handleClearInclude = () => setIncludeDigits(new Set())
   const handleClearExclude = () => setExcludeDigits(new Set())
 
+  const handleSaveConfiguration = () => {
+    saveConfiguration({
+      sum,
+      count,
+      includeDigits,
+      excludeDigits,
+    })
+  }
+
   const handleToggleStruck = (combo: number[]) => {
     const key = combo.join(',')
     setStruckCombinations(prev => {
@@ -73,7 +87,10 @@ function App() {
   return (
     <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 min-h-screen">
       <div className="max-w-4xl mx-auto p-6">
-        <h1 className="text-4xl font-bold text-white text-center mb-8">Sudokulator</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-4xl font-bold text-white text-center flex-1">Sudokulator</h1>
+          <SaveButton onSave={handleSaveConfiguration} />
+        </div>
         <SumControls
           sum={sum}
           count={count}
@@ -100,6 +117,11 @@ function App() {
           excludedCombinations={excludedCombinations}
           struckCombinations={struckCombinations}
           onToggleStruck={handleToggleStruck}
+        />
+
+        <SavedConfigurationsArea
+          savedConfigs={savedConfigs}
+          newlySavedId={newlySavedId}
         />
       </div>
     </div>
